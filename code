@@ -1,0 +1,103 @@
+#include <bits/stdc++.h>
+int getIndex(vector<int> v, int K)
+{
+    auto it = find(v.begin(), v.end(), K);
+    if (it != v.end()) 
+    {   
+        int index = it - v.begin();
+        return index;
+    }
+    else {    
+        return -1;
+    }
+}
+vector<int> longestConsecutiveIncreasingSequence(int *arr, int n) {
+    unordered_map<int,bool> um;
+    int max=0,currentVal=0,startPointCurrent,startPoint;
+    vector<int> indexVec,copy;
+    map<int,int> m;
+    for(int i=0;i<n;i++)
+    {
+        um[arr[i]] = true;
+        copy.push_back(arr[i]);
+    }
+    for(int i=0;i<n;i++)
+    {
+        currentVal=0;
+        if(um[arr[i]] == true)
+        {
+            currentVal++;
+            um[arr[i]] = false;
+            startPointCurrent = arr[i];
+            int r = arr[i]+1;
+        	while(um.find(r) != um.end())
+        	{
+            
+               	currentVal++;
+            	um[r] = false;
+            	r++;
+            	
+            }
+            int l = arr[i] -1;
+            while(um.find(l) != um.end())
+            {
+                currentVal++;
+                um[l] = false;
+                l--;
+                startPointCurrent--;
+            }
+        }
+        if(currentVal > max)
+        {
+            
+            max = currentVal;
+           
+            startPoint = startPointCurrent;
+            //indexVec.push_back(startPoint);
+        }
+        else if(currentVal == max)
+        {
+            if(getIndex(copy,startPointCurrent) < getIndex(copy,startPoint))
+            {
+                startPoint = startPointCurrent;
+            }
+        }
+    }
+    
+    vector<int> vec;
+    
+    
+    	vec.push_back(startPoint);
+    	vec.push_back(startPoint+max-1);
+    
+      
+    return vec;
+    
+    
+}
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+#include "solution.h"
+
+int main() {
+    int size;
+    cin >> size;
+
+    int* arr = new int[size];
+
+    for (int i = 0; i < size; i++) {
+        cin >> arr[i];
+    }
+
+    vector<int> ans = longestConsecutiveIncreasingSequence(arr, size);
+
+    cout << ans[0];
+    if (ans.size() > 1) {
+        cout << " " << ans[ans.size() - 1];
+    }
+
+    delete[] arr;
+}
